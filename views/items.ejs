@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title><%= title %></title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <%- include('header') %>
+    <main>
+      <h1><%= title %></h1>
+      <table>
+        <thead>
+          <tr>
+            <% items.fields.forEach( field => { %>
+            <th><%= field %></th>
+            <% }); %>
+          </tr>
+        </thead>
+        <tbody>
+          <% items.rows.forEach( row => { %>
+          <tr>
+            <% items.fields.forEach ( field => { %>
+            <td><%= field === 'price' ? '$' + row[field] : row[field] %></td>
+            <% }); %>
+          </tr>
+          <% }); %>
+        </tbody>
+      </table>
+    </main>
+  </body>
+</html>
