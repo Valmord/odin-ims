@@ -1,0 +1,20 @@
+<dialog id="category-modal">
+  <h2>Add New Category</h2>
+  <form action="/create/category" method="post">
+    <label for="cat-name">Category Name</label>
+    <input type="text" id="cat-name" name="cat-name" placeholder="rpg" />
+    <label for="cat-friendly-name">Friendly Name</label>
+    <input
+      type="text"
+      id="cat-friendly-name"
+      name="cat-friendly-name"
+      placeholder="Role Playing Games"
+    />
+    <div class="btn-container">
+      <button type="submit">Add Category</button>
+      <button type="button" id="close-cat-modal">Cancel</button>
+    </div>
+  </form>
+</dialog>
+
+<button id="open-cat-modal">Add New Category</button>

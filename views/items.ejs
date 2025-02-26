@@ -14,7 +14,15 @@
         <thead>
           <tr>
             <% items.fields.forEach( field => { %>
-            <th><%= field %></th>
+            <th
+              data-column="<%= field %>"
+              class="<%= field %> <%= sort.sort === field ? (sort.order === 'asc' ? 'sorted-asc' : 'sorted-desc') : '' %>"
+            >
+              <a
+                href="<%= page %>?sort=<%= field %>&order=<%= sort.order === 'asc' ? 'desc' : 'asc' %>"
+                ><%= field %></a
+              >
+            </th>
             <% }); %>
           </tr>
         </thead>
@@ -28,6 +36,8 @@
           <% }); %>
         </tbody>
       </table>
+
+      <script src="/js/items.js"></script>
     </main>
   </body>
 </html>

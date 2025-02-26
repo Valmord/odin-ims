@@ -11,6 +11,10 @@
   background-color: darkgray;
 }
 
+body {
+  position: relative;
+}
+
 header {
   font-size: 2rem;
   background-color: darkblue;
@@ -39,10 +43,29 @@ h1 {
 
 table {
   border-collapse: collapse;
+  margin-top: 15px;
+
+  & a {
+    color: inherit;
+    text-decoration: none;
+    position: relative;
+    display: block;
+    height: 100%;
+    width: 100%;
+  }
 
   & th {
     font-weight: bold;
     border-bottom: 2px black solid;
+    background-color: black;
+    color: white;
+    font-size: 2rem;
+    border-left: 2px gray solid;
+    border-right: 2px gray solid;
+    min-width: max-content;
+    padding: 5px 8px;
+    cursor: pointer;
+    position: relative;
   }
   & td {
     border: 1px black solid;
@@ -51,4 +74,74 @@ table {
   & td:nth-child(1n + 3) {
     text-align: center;
   }
+}
+
+.sorted-asc {
+  color: cyan;
+}
+
+.sorted-desc {
+  color: cyan;
+}
+
+.sorted-asc a::after {
+  content: " ▲";
+  font-size: 1.2rem;
+}
+
+.sorted-desc a::after {
+  content: " ▼";
+  font-size: 1.2rem;
+}
+
+dialog {
+  height: 300px;
+  width: 400px;
+  padding: 20px;
+  border: none;
+  border-radius: 8px;
+  background: white;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  position: absolute;
+  top: 200px;
+  left: calc(50vw - 200px);
+  font-size: 2rem;
+
+  & h2 {
+    font-size: 3rem;
+  }
+
+  & form {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  & input {
+    font-size: inherit;
+    font-family: inherit;
+    padding: 3px 5px;
+  }
+}
+
+button {
+  margin-top: 10px;
+  padding: 5px 10px;
+  color: white;
+  background-color: darkblue;
+  border-radius: 8px;
+}
+
+button:hover {
+  opacity: 0.8;
+  cursor: pointer;
+}
+
+.btn-container {
+  display: flex;
+  justify-content: space-between;
+}
+
+#open-cat-modal {
+  margin-left: 10px;
 }

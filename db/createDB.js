@@ -7,7 +7,8 @@ const { DATABASE, DB_USER, DB_PASS, DB_HOST, DB_PORT } = process.env;
 const createTablesSQL = `
 CREATE TABLE IF NOT EXISTS categories  (
  id INTEGER PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
- category_name VARCHAR (30)
+ category_name VARCHAR (30),
+ friend_name VARCHAR (50)
 );
 
 CREATE TABLE IF NOT EXISTS items (
@@ -23,7 +24,7 @@ CREATE TABLE IF NOT EXISTS items (
 
 const populateCategoriesSQL = `
   INSERT INTO categories (category_name) VALUES 
-  ('strategy'), ('rpg'), ('party'), ('minis'), ('dice'), ('misc');
+  ('strategy', 'Strategy Games'), ('rpg', 'Role Playing Games'), ('party', 'Party Games'), ('minis', 'Miniatures'), ('dice', 'Dice Sets'), ('misc', 'Misc. Items');
 `;
 
 const populateStrategyGameSQL = `
