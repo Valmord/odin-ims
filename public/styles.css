@@ -30,6 +30,7 @@ header {
 
 main {
   padding: 10px 20px;
+  font-size: 1.6rem;
 }
 
 h1 {
@@ -37,7 +38,6 @@ h1 {
 }
 
 table {
-  font-size: 1.6rem;
   border-collapse: collapse;
 
   & th {
@@ -46,7 +46,7 @@ table {
   }
   & td {
     border: 1px black solid;
-    padding: 2px 3px;
+    padding: 2px 8px;
   }
   & td:nth-child(1n + 3) {
     text-align: center;

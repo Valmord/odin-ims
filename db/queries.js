@@ -18,6 +18,17 @@ async function getItems(id) {
   }
 }
 
+async function getCategories() {
+  const SQL = "SELECT * FROM categories;";
+  try {
+    const { rows } = await pool.query(SQL);
+    return rows;
+  } catch (err) {
+    console.error(`Error getting categories`, err);
+  }
+}
+
 module.exports = {
   getItems,
+  getCategories,
 };

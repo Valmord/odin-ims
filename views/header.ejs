@@ -1,11 +1,11 @@
 <header>
   <ul class="nav">
     <li><a href="/">Home</a></li>
-    <li><a href="/strategy">Strategy Games</a></li>
-    <li><a href="/rpg">RPG Games</a></li>
-    <li><a href="/party">Party Games</a></li>
-    <li><a href="/minis">Minatures</a></li>
-    <li><a href="/dice">Dice</a></li>
-    <li><a href="/misc">Misc. items</a></li>
+    <% categories.forEach( cat => { %>
+    <li>
+      <a href="/category/<%= cat.category_name %>"><%= cat.friendly_name %></a>
+    </li>
+
+    <% }) %>
   </ul>
 </header>
