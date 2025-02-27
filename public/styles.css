@@ -145,3 +145,14 @@ button:hover {
 #open-cat-modal {
   margin-left: 10px;
 }
+
+.edit-btn,
+.del-btn {
+  & button {
+    appearance: none;
+    background-color: inherit;
+    border: none;
+    padding: 0;
+    margin: 0;
+  }
+}

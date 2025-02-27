@@ -1,29 +1,29 @@
-<dialog id="category-modal">
+<dialog id="edit-category-modal" class="<%= modalShown %>">
   <h2>Add New Category</h2>
-  <form action="/cat/create" method="post">
+  <form action="/cat/update/<%= id %>" method="post">
     <label for="cat-name">Category Name</label>
     <input
       type="text"
       id="cat-name"
       name="cat-name"
-      placeholder="rpg"
+      placeholder="<%= category.category_name %>"
       maxlength="30"
       minlength="2"
+      value="<%= category.category_name %>"
     />
     <label for="cat-friendly-name">Friendly Name</label>
     <input
       type="text"
       id="cat-friendly-name"
       name="cat-friendly-name"
-      placeholder="Role Playing Games"
+      placeholder="<%= category.friendly_name %>"
       maxlength="50"
       minlength="5"
+      value="<%= category.friendly_name %>"
     />
     <div class="btn-container">
-      <button type="submit">Add Category</button>
+      <button type="submit">Save Category</button>
       <button type="button" id="close-cat-modal">Cancel</button>
     </div>
   </form>
 </dialog>
-
-<button id="open-cat-modal">Add New Category</button>

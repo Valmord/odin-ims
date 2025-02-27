@@ -3,8 +3,7 @@ const pool = require("./pool");
 const validDirections = ["asc", "desc"];
 
 async function getItems(id, settings, validFields) {
-  let SQL = "SELECT * FROM items WHERE category_id = $1";
-  const variables = [id];
+  let SQL = "SELECT * FROM items WHERE category_id = $1 ORDER BY id";
 
   if (settings.sort !== undefined) {
     // Checks against SQL injection
@@ -19,9 +18,6 @@ async function getItems(id, settings, validFields) {
 
     SQL = `SELECT * FROM items WHERE category_id = $1 ORDER BY ${settings.sort} ${settings.order}`;
   }
-
-  console.log(variables);
-  console.log(SQL);
 
   try {
     const data = await pool.query(SQL, [id]);
@@ -41,7 +37,7 @@ async function getItems(id, settings, validFields) {
 }
 
 async function getCategories() {
-  const SQL = "SELECT * FROM categories;";
+  const SQL = "SELECT * FROM categories ORDER BY id;";
   try {
     const { rows } = await pool.query(SQL);
     return rows;
@@ -61,8 +57,21 @@ async function addCategory(categoryName, friendlyName) {
   }
 }
 
+async function updateCategory(categoryName, friendlyName, catId) {
+  const SQL = `UPDATE categories SET category_name = $1, friendly_name = $2 WHERE id = ${catId}`;
+
+  console.log(SQL);
+
+  try {
+    await pool.query(SQL, [categoryName, friendlyName]);
+  } catch (err) {
+    console.error("Error updating category:", err);
+  }
+}
+
 module.exports = {
   getItems,
   getCategories,
   addCategory,
+  updateCategory,
 };

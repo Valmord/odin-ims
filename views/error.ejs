@@ -10,12 +10,12 @@
     <%- include('header') %>
     <main>
       <h1><%= title %></h1>
-      <h2>Welcome to the IMS Express, please choose your link from above</h2>
+      <ul>
+        <% errors.forEach( error => { %>
+        <li><%= error.msg %></li>
+        <% }) %>
+      </ul>
+      <a href="/">Return to home</a>
     </main>
-    <%- include('modalAddCat') %>
-    <form action="/cat/edit" method="get">
-      <button type="submit" id="edit-cats">Edit Categories</button>
-    </form>
   </body>
-  <script src="/js/homepage.js"></script>
 </html>
