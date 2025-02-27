@@ -8,7 +8,7 @@ router.get("/category/:route", pageController.loadCategory);
 router.get("/cat/edit", pageController.editCategory);
 router.get("/cat/edit/:id", pageController.editCategoryModal);
 router.post("/cat/create", pageController.addCategory);
-router.post("/cat/update/:id", pageController.updateCategory);
-router.delete("/cat/delete/:id");
+router.put("/cat/update/:id", pageController.updateCategory);
+router.delete("/cat/delete/:id", pageController.deleteCategory);
 
 module.exports = router;

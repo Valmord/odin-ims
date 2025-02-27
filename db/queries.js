@@ -58,14 +58,24 @@ async function addCategory(categoryName, friendlyName) {
 }
 
 async function updateCategory(categoryName, friendlyName, catId) {
-  const SQL = `UPDATE categories SET category_name = $1, friendly_name = $2 WHERE id = ${catId}`;
-
-  console.log(SQL);
+  const SQL =
+    "UPDATE categories SET category_name = $1, friendly_name = $2 WHERE id = $3";
 
   try {
-    await pool.query(SQL, [categoryName, friendlyName]);
+    await pool.query(SQL, [categoryName, friendlyName, catId]);
   } catch (err) {
     console.error("Error updating category:", err);
+  }
+}
+
+async function deleteCategory(catId) {
+  console.log("in sql", catId);
+  const SQL = "DELETE FROM categories WHERE id = $1";
+
+  try {
+    await pool.query(SQL, [catId]);
+  } catch (err) {
+    console.error("Error deleting category:", err);
   }
 }
 
@@ -74,4 +84,5 @@ module.exports = {
   getCategories,
   addCategory,
   updateCategory,
+  deleteCategory,
 };

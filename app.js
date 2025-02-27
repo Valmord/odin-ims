@@ -9,11 +9,12 @@ app.use(express.static(assetsPath));
 
 app.set("view engine", "ejs");
 app.use(express.urlencoded({ extended: true }));
+app.use(express.json());
 app.use("/", pagesRouter);
 
-app.all("/*", (req, res) => {
-  res.send("Invalid page");
-});
+// app.all("/*", (req, res) => {
+//   res.send("Invalid page");
+// });
 
 app.listen(process.env.EX_PORT, () => {
   console.log(`listening on port ${process.env.EX_PORT}`);

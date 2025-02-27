@@ -20,14 +20,14 @@
           </tr>
         </thead>
         <tbody>
-          <% categories.forEach( (category, index) => { %>
+          <% categories.forEach( (category) => { %>
           <tr>
             <td><%= category.category_name %></td>
             <td><%= category.friendly_name %></td>
-            <td class="edit-btn" data-index="<%= index+1 %>">
+            <td class="edit-btn" data-index="<%= category.id %>">
               <button>✏️</button>
             </td>
-            <td class="del-btn" data-index="<%= index+1 %>">
+            <td class="del-btn" data-index="<%= category.id %>">
               <button>❌</button>
             </td>
           </tr>

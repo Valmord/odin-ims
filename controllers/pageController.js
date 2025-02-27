@@ -13,7 +13,7 @@ async function loadIndex(req, res) {
   if (categories.length === 0) {
     categories = await db.getCategories();
   }
-  console.log(categories);
+  // console.log(categories);
 
   res.render("index", { title: "Home Page", categories });
 }
@@ -24,7 +24,7 @@ async function loadCategory(req, res) {
   }
   const routeName = req.params.route;
 
-  console.log("query parameters", req.query);
+  // console.log("query parameters", req.query);
 
   const catInfo = categories.find(
     (category) => category.category_name === routeName
@@ -77,12 +77,12 @@ async function editCategoryModal(req, res) {
     categories = await db.getCategories();
   }
 
-  const id = req.params.id;
+  const id = +req.params.id;
   res.render("editCats", {
     title: "Edit Categories",
     id,
     categories,
-    category: categories[+id - 1],
+    category: categories.find((category) => category.id === id),
     modalShown: "shown",
   });
 }
@@ -146,11 +146,13 @@ const addCategory = [
 const updateCategory = [
   validateNewCategory,
   async (req, res) => {
+    console.log("body in updateCat", req.body);
+
     if (categories.length === 0) {
       categories = await db.getCategories();
     }
     const errors = validationResult(req);
-    console.log(errors);
+    // console.log(errors);
     if (!errors.isEmpty()) {
       return res.status(400).render("error", {
         title: "Error updating category",
@@ -163,27 +165,62 @@ const updateCategory = [
     const friendlyName = req.body["cat-friendly-name"];
     const catId = +req.params.id;
 
-    if (catId >= categories.length) {
+    console.log("Values", catId, catName, friendlyName);
+
+    if (!categories.find((val) => val.id === catId)) {
       return res.status(400).render("error", {
         title: "Error updating category",
         categories,
-        errors: [{ msg: "id more then allowable" }],
+        errors: [{ msg: "invalid id" }],
       });
     }
 
     if (
-      categories.find((cat) => cat.category_name === catName) ||
+      categories.find(
+        (cat) =>
+          cat.category_name === catName && cat.friendly_name === friendlyName
+      ) ||
       catName.length < 3 ||
       friendlyName.length < 3
     ) {
-      res.send("Category Already Exists!");
+      return res.send("Category Already Exists!");
     }
 
-    await db.updateCategory(catName, friendlyName, catId);
-    categories = await db.getCategories();
-    res.redirect("/cat/edit");
+    try {
+      await db.updateCategory(catName, friendlyName, catId);
+      categories = await db.getCategories();
+
+      res.status(200).json({ message: "Category updated successfully" });
+      // res.redirect("/");
+    } catch (err) {
+      console.error(err);
+      res.status(500).send("Error Updating Category");
+    }
   },
 ];
+
+async function deleteCategory(req, res) {
+  console.log("here");
+  if (categories.length === 0) {
+    categories = await db.getCategories();
+  }
+  const catId = +req.params.id;
+
+  if (!categories.find((category) => category.id === catId)) {
+    console.log("hopefully not in here");
+    return res.status(400).render("error", {
+      title: "Error updating category",
+      categories,
+      errors: [{ msg: "invalid id" }],
+    });
+  }
+
+  await db.deleteCategory(catId);
+  // res.redirect("/cat/edit");
+  categories = await db.getCategories();
+
+  res.status(200).json({ message: `Deleting category with id: ${catId}` });
+}
 
 module.exports = {
   loadCategory,
@@ -193,4 +230,5 @@ module.exports = {
   updateCategory,
   editCategory,
   editCategoryModal,
+  deleteCategory,
 };
