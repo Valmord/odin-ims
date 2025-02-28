@@ -31,9 +31,11 @@
         </thead>
         <tbody>
           <% items.rows.forEach( row => { %>
-          <tr>
+          <tr data-id="<%= row.id %>">
             <% items.fields.forEach ( field => { %>
-            <td><%= field === 'price' ? '$' + row[field] : row[field] %></td>
+            <td class="<%= field %>">
+              <%= field === 'price' ? '$' + row[field] : row[field] %>
+            </td>
             <% }); %>
           </tr>
           <% }); %>

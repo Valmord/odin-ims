@@ -170,11 +170,14 @@ main ~ form {
   gap: 50px;
 }
 
-#add-item-modal {
-  height: 475px;
+#add-item-modal,
+#edit-item-modal {
+  height: 520px;
+  top: 150px;
 
   & textarea {
     resize: vertical;
     padding: 5px;
+    height: 95px;
   }
 }
