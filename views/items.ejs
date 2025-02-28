@@ -9,7 +9,10 @@
   <body>
     <%- include('header') %>
     <main>
-      <h1><%= title %></h1>
+      <div class="under-header">
+        <h1><%= title %></h1>
+        <button id="add-new-item">Add New</button>
+      </div>
       <table>
         <thead>
           <tr>
@@ -39,5 +42,7 @@
 
       <!-- <script src="/js/items.js"></script> -->
     </main>
+    <%- include('modalAddItem') %>
+    <script src="/js/items.js"></script>
   </body>
 </html>

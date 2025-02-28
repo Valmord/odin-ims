@@ -1,4 +1,3 @@
-const { body, validationResult } = require("express-validator");
 const db = require("../db/queries");
 
 String.prototype.toProperCase = function () {
@@ -7,28 +6,39 @@ String.prototype.toProperCase = function () {
     .join(" ");
 };
 
-let categories = [];
+const categories = {
+  current: [],
+  isLoading: false,
+  setup: async function () {
+    if (!this.isLoading && this.current.length === 0) {
+      this.isLoading = true;
+      this.current = await db.getCategories();
+    }
+    this.isLoading = false;
+  },
+  update: async function () {
+    this.current = await db.getCategories();
+  },
+  get: function () {
+    return this.current;
+  },
+};
 
 async function loadIndex(req, res) {
-  if (categories.length === 0) {
-    categories = await db.getCategories();
-  }
-  // console.log(categories);
+  await categories.setup();
 
-  res.render("index", { title: "Home Page", categories });
+  res.render("index", { title: "Home Page", categories: categories.get() });
 }
 
 async function loadCategory(req, res) {
-  if (categories.length === 0) {
-    categories = await db.getCategories();
-  }
+  await categories.setup();
   const routeName = req.params.route;
 
   // console.log("query parameters", req.query);
 
-  const catInfo = categories.find(
-    (category) => category.category_name === routeName
-  );
+  const catInfo = categories
+    .get()
+    .find((category) => category.category_name === routeName);
   // console.log(catInfo);
 
   if (!catInfo) {
@@ -37,14 +47,15 @@ async function loadCategory(req, res) {
   }
 
   try {
-    const items = await db.getItems(catInfo.id, req.query, categories);
+    const items = await db.getItems(catInfo.id, req.query, categories.get());
     if (!items) throw new Error("Bad query");
     res.render("items", {
       title: routeName.toProperCase(),
       page: routeName,
       sort: req.query,
+      cat_name: req.params.route,
       items,
-      categories,
+      categories: categories.get(),
     });
   } catch (err) {
     console.error("Something went wrong");
@@ -53,19 +64,15 @@ async function loadCategory(req, res) {
 }
 
 async function pageNotFound(req, res) {
-  if (categories.length === 0) {
-    categories = await db.getCategories();
-  }
-  res.render("404", { title: "Page Not Found", categories });
+  await categories.setup();
+  res.render("404", { title: "Page Not Found", categories: categories.get() });
 }
 
 async function editCategory(req, res) {
-  if (categories.length === 0) {
-    categories = await db.getCategories();
-  }
+  await categories.setup();
   res.render("editCats", {
     title: "Edit Categories",
-    categories,
+    categories: categories.get(),
     id: "",
     modalShown: "",
     category: [],
@@ -73,162 +80,24 @@ async function editCategory(req, res) {
 }
 
 async function editCategoryModal(req, res) {
-  if (categories.length === 0) {
-    categories = await db.getCategories();
-  }
+  await categories.setup();
 
   const id = +req.params.id;
   res.render("editCats", {
     title: "Edit Categories",
     id,
-    categories,
-    category: categories.find((category) => category.id === id),
+    categories: categories.get(),
+    category: categories.get().find((category) => category.id === id),
     modalShown: "shown",
   });
 }
 
-const validateNewCategory = [
-  body("cat-name")
-    .trim()
-    .isLength({
-      min: 2,
-      max: 30,
-    })
-    .withMessage(
-      "Category name must be more then 1 character and less than 51"
-    ),
-
-  body("cat-friendly-name")
-    .trim()
-    .isLength({
-      min: 5,
-      max: 50,
-    })
-    .withMessage(
-      "Category name must be more then 4 characters and less that 51"
-    ),
-];
-
-const addCategory = [
-  validateNewCategory,
-  async (req, res) => {
-    const errors = validationResult(req);
-    console.log(errors);
-    if (!errors.isEmpty()) {
-      return res.status(400).render("error", {
-        title: "Error adding category",
-        categories,
-        errors: errors.array(),
-      });
-    }
-
-    if (categories.length === 0) {
-      categories = await db.getCategories();
-    }
-
-    const catName = req.body["cat-name"].toLowerCase();
-    const friendlyName = req.body["cat-friendly-name"];
-
-    if (
-      categories.find((cat) => cat.category_name === catName) ||
-      catName.length < 3 ||
-      friendlyName.length < 3
-    ) {
-      res.send("Category Already Exists!");
-    }
-
-    await db.addCategory(catName, friendlyName);
-    categories = await db.getCategories();
-    res.redirect("/");
-  },
-];
-
-const updateCategory = [
-  validateNewCategory,
-  async (req, res) => {
-    console.log("body in updateCat", req.body);
-
-    if (categories.length === 0) {
-      categories = await db.getCategories();
-    }
-    const errors = validationResult(req);
-    // console.log(errors);
-    if (!errors.isEmpty()) {
-      return res.status(400).render("error", {
-        title: "Error updating category",
-        categories,
-        errors: errors.array(),
-      });
-    }
-
-    const catName = req.body["cat-name"].toLowerCase();
-    const friendlyName = req.body["cat-friendly-name"];
-    const catId = +req.params.id;
-
-    console.log("Values", catId, catName, friendlyName);
-
-    if (!categories.find((val) => val.id === catId)) {
-      return res.status(400).render("error", {
-        title: "Error updating category",
-        categories,
-        errors: [{ msg: "invalid id" }],
-      });
-    }
-
-    if (
-      categories.find(
-        (cat) =>
-          cat.category_name === catName && cat.friendly_name === friendlyName
-      ) ||
-      catName.length < 3 ||
-      friendlyName.length < 3
-    ) {
-      return res.send("Category Already Exists!");
-    }
-
-    try {
-      await db.updateCategory(catName, friendlyName, catId);
-      categories = await db.getCategories();
-
-      res.status(200).json({ message: "Category updated successfully" });
-      // res.redirect("/");
-    } catch (err) {
-      console.error(err);
-      res.status(500).send("Error Updating Category");
-    }
-  },
-];
-
-async function deleteCategory(req, res) {
-  console.log("here");
-  if (categories.length === 0) {
-    categories = await db.getCategories();
-  }
-  const catId = +req.params.id;
-
-  if (!categories.find((category) => category.id === catId)) {
-    console.log("hopefully not in here");
-    return res.status(400).render("error", {
-      title: "Error updating category",
-      categories,
-      errors: [{ msg: "invalid id" }],
-    });
-  }
-
-  await db.deleteCategory(catId);
-  // res.redirect("/cat/edit");
-  categories = await db.getCategories();
-
-  res.status(200).json({ message: `Deleting category with id: ${catId}` });
-}
-
 module.exports = {
+  categories,
+
   loadCategory,
   loadIndex,
   pageNotFound,
-  addCategory,
-  updateCategory,
   editCategory,
   editCategoryModal,
-  deleteCategory,
 };

@@ -1,0 +1,48 @@
+<dialog id="add-item-modal">
+  <h2>Add New <%= title %></h2>
+  <form action="/item/create/<%= cat_name %>" method="post">
+    <label for="item-name">Item Name</label>
+    <input
+      type="text"
+      id="item-name"
+      name="item-name"
+      placeholder="Catan"
+      maxlength="255"
+      minlength="1"
+      required
+    />
+
+    <label for="item-description">Description</label>
+    <textarea
+      name="item-description"
+      id="item-description"
+      placeholder="Epic battle of wits"
+      required
+    ></textarea>
+
+    <label for="item-price">Price</label>
+    <input
+      type="number"
+      name="item-price"
+      id="item-price"
+      placeholder="$100"
+      min="0.01"
+      required
+    />
+
+    <label for="item-stock">Total stocked</label>
+    <input
+      type="number"
+      name="item-stock"
+      id="item-stock"
+      placeholder="1"
+      min="0"
+      required
+    />
+
+    <div class="btn-container">
+      <button type="submit">Add Category</button>
+      <button type="button" id="close-modal">Cancel</button>
+    </div>
+  </form>
+</dialog>

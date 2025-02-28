@@ -79,10 +79,25 @@ async function deleteCategory(catId) {
   }
 }
 
+async function addItem(catId, itemName, desc, price, stock) {
+  const SQL = `
+  INSERT INTO items (category_id, name, description, price, inventory)
+  VALUES ($1, $2, $3, $4, $5);
+  `;
+
+  try {
+    await pool.query(SQL, [catId, itemName, desc, price, stock]);
+  } catch (err) {
+    console.error("Error adding item:", err);
+  }
+}
+
 module.exports = {
   getItems,
   getCategories,
   addCategory,
   updateCategory,
   deleteCategory,
+
+  addItem,
 };
