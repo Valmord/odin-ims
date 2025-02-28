@@ -20,7 +20,8 @@
           </tr>
         </thead>
         <tbody>
-          <% categories.forEach( (category) => { %>
+          <% categories.forEach( (category, index) => { %> <% if (index !== 0) {
+          %>
           <tr>
             <td><%= category.category_name %></td>
             <td><%= category.friendly_name %></td>
@@ -31,7 +32,7 @@
               <button>❌</button>
             </td>
           </tr>
-          <% }) %>
+          <% } %> <% }) %>
         </tbody>
       </table>
     </main>

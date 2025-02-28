@@ -8,14 +8,20 @@ document.addEventListener("DOMContentLoaded", () => {
   const descElement = form.querySelector("#item-description");
   const priceElement = form.querySelector("#item-price");
   const stockElement = form.querySelector("#item-stock");
+  const catElement = form.querySelector("#item-category");
+  const headerElement = modal.querySelector("h2");
   const delBtn = form.querySelector("#delete-item-btn");
+  const addItemBtn = form.querySelector('button[type="submit"]');
 
   openAddModalBtn.onclick = () => modal.showModal();
   cancelBtn.addEventListener("click", () => {
     form.setAttribute("method", "post");
     form.reset();
     descElement.textContent = "";
+    catElement.disabled = true;
+    headerElement.textContent = "Add Item";
     delBtn.className = "hidden";
+    addItemBtn.textContent = "Add item";
     modal.close();
   });
 
@@ -38,7 +44,7 @@ document.addEventListener("DOMContentLoaded", () => {
         return;
       }
 
-      await fetch(`/item/update/${itemId}`, {
+      const response = await fetch(`/item/update/${itemId}`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
@@ -48,16 +54,22 @@ document.addEventListener("DOMContentLoaded", () => {
           desc: descElement.textContent.trim(),
           price: Number(priceElement.value.trim()),
           inventory: Number(stockElement.value.trim()),
+          catId: +catElement.value,
         }),
       });
-      form.reset();
-      descElement.textContent = "";
-      modal.close();
-      window.location.reload();
+      if (response.ok) {
+        window.location.reload();
+      }
+      // form.reset();
+      // descElement.textContent = "";
+      // modal.close();
       return;
     }
 
+    catElement.disabled = false;
     form.submit();
+
+    catElement.disabled = true;
   });
 
   const tableData = document.querySelectorAll("td");
@@ -71,6 +83,9 @@ document.addEventListener("DOMContentLoaded", () => {
         item[td.className] = td.textContent.trim();
       });
 
+      addItemBtn.textContent = "Update";
+      headerElement.textContent = "Edit Item";
+      catElement.disabled = false;
       form.dataset.id = parent.dataset.id;
       nameElement.value = item.name;
       descElement.textContent = item.description;

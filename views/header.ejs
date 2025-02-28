@@ -1,12 +1,19 @@
 <header>
   <ul class="nav">
     <li><a href="/">Home</a></li>
-    <% categories.forEach( cat => { %>
+    <% categories.forEach( (cat, index) => { %>
     <li>
+      <% if (index !== 0) { %>
       <a href="/category/<%= cat.category_name %>"><%= cat.friendly_name %></a>
+      <% } %>
     </li>
 
     <% }) %>
+    <li>
+      <a href="/category/<%= categories[0].category_name %>"
+        ><%= categories[0].friendly_name %></a
+      >
+    </li>
   </ul>
 </header>
 

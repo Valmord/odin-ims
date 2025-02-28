@@ -83,6 +83,7 @@ table {
     color: purple;
     font-weight: bold;
     cursor: pointer;
+    font-size: 0.95em;
   }
 }
 
@@ -127,7 +128,8 @@ dialog {
     gap: 10px;
   }
 
-  & input {
+  & input,
+  select {
     font-size: inherit;
     font-family: inherit;
     padding: 3px 5px;
@@ -178,8 +180,8 @@ main ~ form {
 
 #add-item-modal,
 #edit-item-modal {
-  height: 520px;
-  top: 150px;
+  height: 600px;
+  top: 100px;
 
   & textarea {
     resize: vertical;

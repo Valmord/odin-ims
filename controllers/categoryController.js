@@ -115,10 +115,17 @@ async function deleteCategory(req, res) {
   await categories.setup();
   const catId = +req.params.id;
 
-  if (!categories.get().find((category) => category.id === catId)) {
-    console.log("hopefully not in here");
+  if (catId === 1) {
     return res.status(400).render("error", {
-      title: "Error updating category",
+      title: "Error deleting category",
+      categories: categories.get(),
+      errors: [{ msg: "id cannot be 1 (uncategorised)" }],
+    });
+  }
+
+  if (!categories.get().find((category) => category.id === catId)) {
+    return res.status(400).render("error", {
+      title: "Error deleting  category",
       categories: categories.get(),
       errors: [{ msg: "invalid id" }],
     });

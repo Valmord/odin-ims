@@ -69,13 +69,24 @@ async function updateCategory(categoryName, friendlyName, catId) {
 }
 
 async function deleteCategory(catId) {
-  console.log("in sql", catId);
-  const SQL = "DELETE FROM categories WHERE id = $1";
-
+  const client = await pool.connect();
   try {
-    await pool.query(SQL, [catId]);
+    await client.query("BEGIN");
+
+    // Moves items into uncategorised before deletion
+    await client.query(
+      "UPDATE items SET category_id = 1 WHERE category_id = $1",
+      [catId]
+    );
+
+    await client.query("DELETE FROM categories WHERE id = $1", [catId]);
+
+    await client.query("COMMIT");
   } catch (err) {
+    await client.query("ROLLBACK");
     console.error("Error deleting category:", err);
+  } finally {
+    client.release();
   }
 }
 
@@ -92,13 +103,13 @@ async function addItem(catId, itemName, desc, price, stock) {
   }
 }
 
-async function updateItem(itemId, itemName, desc, price, stock) {
+async function updateItem(itemId, itemName, desc, price, stock, catId) {
   const SQL = `
-  UPDATE items SET name = $2, description = $3, price = $4, inventory = $5
+  UPDATE items SET name = $2, description = $3, price = $4, inventory = $5, category_id = $6
   WHERE id = $1`;
 
   try {
-    await pool.query(SQL, [itemId, itemName, desc, price, stock]);
+    await pool.query(SQL, [itemId, itemName, desc, price, stock, catId]);
   } catch (err) {
     throw err;
   }

@@ -47,10 +47,13 @@ const addNewItem = [
     const itemDesc = req.body["item-description"];
     const itemPrice = +req.body["item-price"];
     const itemStock = +req.body["item-stock"];
+    const catID = +req.body["item-category"];
     const { cat_name } = req.params;
-    const catID = categories
-      .get()
-      .find((cat) => cat.category_name === cat_name).id;
+    // const catID = categories
+    //   .get()
+    //   .find((cat) => cat.category_name === cat_name).id;
+
+    console.log(req.body);
 
     if (!cat_name) return res.redirect("/");
 
@@ -66,14 +69,13 @@ const addNewItem = [
 
 async function updateItem(req, res) {
   const { id } = req.params;
-  const { name, desc, price, inventory } = req.body;
+  const { name, desc, price, inventory, catId } = req.body;
   // console.log(req.body);
-  console.log(name, desc, price, inventory);
+  console.log(name, desc, price, inventory, catId);
 
   try {
-    console.log("in try block");
-    db.updateItem(id, name, desc, price, inventory);
-    res.status(200);
+    db.updateItem(id, name, desc, price, inventory, catId);
+    res.status(200).json({ message: "Sucessfully updated item" });
   } catch (err) {
     console.error("Error updating item:", err);
   }
