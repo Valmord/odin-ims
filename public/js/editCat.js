@@ -29,7 +29,7 @@ document.addEventListener("DOMContentLoaded", () => {
     console.log("Names", catName, friendlyName);
 
     try {
-      const response = await fetch(`/cat/update/${modal.dataset.index}`, {
+      await fetch(`/cat/update/${modal.dataset.index}`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json", // Ensure this is correct
@@ -38,7 +38,6 @@ document.addEventListener("DOMContentLoaded", () => {
           "cat-name": catName,
           "cat-friendly-name": friendlyName,
         }),
-        redirect: "follow",
       });
 
       window.location.href = "/cat/edit/";
@@ -53,7 +52,7 @@ document.addEventListener("DOMContentLoaded", () => {
       const confirmation = confirm("Are you sure you want to delete?");
       if (confirmation) {
         try {
-          const response = await fetch(`/cat/delete/${catId}`, {
+          await fetch(`/cat/delete/${catId}`, {
             method: "DELETE",
           });
 

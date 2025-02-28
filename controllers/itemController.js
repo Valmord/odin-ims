@@ -64,6 +64,34 @@ const addNewItem = [
   },
 ];
 
+async function updateItem(req, res) {
+  const { id } = req.params;
+  const { name, desc, price, inventory } = req.body;
+  // console.log(req.body);
+  console.log(name, desc, price, inventory);
+
+  try {
+    console.log("in try block");
+    db.updateItem(id, name, desc, price, inventory);
+    res.status(200);
+  } catch (err) {
+    console.error("Error updating item:", err);
+  }
+}
+
+async function deleteItem(req, res) {
+  const { id } = req.params;
+
+  try {
+    db.deleteItem(id);
+    res.status(200).json({ message: "Item deleted successfully" });
+  } catch (err) {
+    console.error("Error deleting item:", err);
+  }
+}
+
 module.exports = {
   addNewItem,
+  updateItem,
+  deleteItem,
 };

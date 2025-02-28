@@ -92,6 +92,32 @@ async function addItem(catId, itemName, desc, price, stock) {
   }
 }
 
+async function updateItem(itemId, itemName, desc, price, stock) {
+  const SQL = `
+  UPDATE items SET name = $2, description = $3, price = $4, inventory = $5
+  WHERE id = $1`;
+
+  try {
+    await pool.query(SQL, [itemId, itemName, desc, price, stock]);
+  } catch (err) {
+    throw err;
+  }
+}
+
+async function deleteItem(id) {
+  const SQL = `
+  DELETE FROM items WHERE id = $1
+  `;
+
+  try {
+    await pool.query(SQL, [id]);
+    console.log(`Succesfully deleted item:${id}`);
+  } catch (err) {
+    console.error("Something went wrong in delete item for id:", id);
+    throw err;
+  }
+}
+
 module.exports = {
   getItems,
   getCategories,
@@ -100,4 +126,6 @@ module.exports = {
   deleteCategory,
 
   addItem,
+  updateItem,
+  deleteItem,
 };

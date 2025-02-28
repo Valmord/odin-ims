@@ -15,5 +15,7 @@ router.put("/cat/update/:id", categoryController.updateCategory);
 router.delete("/cat/delete/:id", categoryController.deleteCategory);
 
 router.post("/item/create/:cat_name", itemController.addNewItem);
+router.put("/item/update/:id", itemController.updateItem);
+router.delete("/item/delete/:id", itemController.deleteItem);
 
 module.exports = router;
