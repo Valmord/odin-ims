@@ -60,9 +60,6 @@ document.addEventListener("DOMContentLoaded", () => {
       if (response.ok) {
         window.location.reload();
       }
-      // form.reset();
-      // descElement.textContent = "";
-      // modal.close();
       return;
     }
 
