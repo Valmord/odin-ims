@@ -3,7 +3,7 @@ const { Client } = require("pg");
 const process = require("node:process");
 require("dotenv").config();
 // const { DATABASE, DB_USER, DB_PASS, DB_HOST, DB_PORT } = process.env;
-const { DB_URL } = process.env;
+const { DATABASE_URL } = process.env;
 
 const createTablesSQL = `
 CREATE TABLE IF NOT EXISTS categories  (
@@ -227,7 +227,7 @@ async function setupDatabase() {
   console.log("...seeding");
 
   const client = new Client({
-    connectionString: DB_URL,
+    connectionString: DATABASE_URL,
     // connectionString: `postgresql://${DB_USER}:${DB_PASS}@${DB_HOST}:${DB_PORT}/${DATABASE}`,
   });
   try {
